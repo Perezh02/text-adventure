@@ -1,36 +1,39 @@
 package com.roguelike.fallout.model;
 
-public class Enemy {
+public class Boss {
 
   // Fields
   private String name;
   private int health;
   private int attackPower;
-  private double dropChance;
   private int radiation;
 
+
   // Constructors
-  public Enemy(String name, int health, int attackPower, double dropChance, int radiation) {
+  public Boss(String name, int health, int attackPower, int radiation) {
     this.name = name;
     this.health = health;
     this.attackPower = attackPower;
-    this.dropChance = dropChance;
     this.radiation = radiation;
+
   }
 
   // Methods
-  public Enemy(String name) {
+  public Boss(String name) {
     this.name = name;
-    if (name.equals("Skeleton")) {
-      this.health = 50;
-      this.attackPower = (int) (Math.random() * 6);
-    } else if (name.equals("Ghoul")) {
-      this.health = 55;
-      this.attackPower = (int) (Math.random() * 15);
-    } else if (name.equals("Rad Roach")) {
-      this.health = 40;
+    if (name.equals("Deathclaw")) {
+      this.health = 100;
       this.attackPower = (int) (Math.random() * 25);
     }
+
+  }
+
+  public void takeDamage(int damage) {
+    this.health -= damage;
+  }
+
+  public int getAttackPower() {
+    return this.attackPower;
   }
 
   public void setRadiation(int radiation) {
@@ -49,20 +52,7 @@ public class Enemy {
     this.radiation -= amount;
   }
 
-  public void takeDamage(int damage) {
-    this.health -= damage;
-  }
-
-  public void setDropChance(double dropChance) {
-    this.dropChance = dropChance;
-  }
-
-  public int getAttackPower() {
-    return this.attackPower;
-  }
-
   public boolean isDead() {
     return this.health <= 0;
   }
-
 }
