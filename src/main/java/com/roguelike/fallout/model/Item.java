@@ -9,9 +9,10 @@ public class Item {
   // Constructor
   public Item(String itemName, String itemDescription) {
     this.itemName = itemName;
+    this.itemDescription = itemDescription;
   }
 
-  // Methods
+  // HelperMethods
 
 
   // Getters and setters

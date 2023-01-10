@@ -6,19 +6,19 @@ public class Enemy {
   private String name;
   private int health;
   private int attackPower;
-  private double dropChance;
-  private int radiation;
+  private double dropChanceStimPak;
+  private boolean isDead;
+
 
   // Constructors
-  public Enemy(String name, int health, int attackPower, double dropChance, int radiation) {
+  public Enemy(String name, int health, int attackPower, double dropChanceStimPak) {
     this.name = name;
     this.health = health;
     this.attackPower = attackPower;
-    this.dropChance = dropChance;
-    this.radiation = radiation;
+    this.dropChanceStimPak = dropChanceStimPak;
+    isDead = false;
   }
 
-  // Methods
   public Enemy(String name) {
     this.name = name;
     if (name.equals("Skeleton")) {
@@ -26,35 +26,60 @@ public class Enemy {
       this.attackPower = (int) (Math.random() * 6);
     } else if (name.equals("Ghoul")) {
       this.health = 55;
-      this.attackPower = (int) (Math.random() * 15);
+      this.attackPower = (int) (Math.random() * 15 + 1);
     } else if (name.equals("Rad Roach")) {
       this.health = 40;
-      this.attackPower = (int) (Math.random() * 25);
+      this.attackPower = (int) (Math.random() * 26);
     }
   }
 
-  public void setRadiation(int radiation) {
-    this.radiation = radiation;
+  // Method
+  public static Enemy generateRandomEnemy() {
+    String[] enemyNames = {"Skeleton", "Ghoul", "Rad Roach"};
+    int randomIndex = (int) (Math.random() * enemyNames.length);
+    String randomName = enemyNames[randomIndex];
+    double randomDropChance = Math.random();
+    int health = 0;
+    int attackPower = 0;
+    if (randomName.equals("Skeleton")) {
+      health = 50;
+      attackPower = (int) (Math.random() * 6);
+    } else if (randomName.equals("Ghoul")) {
+      health = 55;
+      attackPower = (int) (Math.random() * 16);
+    } else if (randomName.equals("Rad Roach")) {
+      health = 40;
+      attackPower = (int) (Math.random() * 26);
+    }
+    return new Enemy(randomName, health, attackPower, randomDropChance);
   }
 
-  public int getRadiation() {
-    return this.radiation;
+  public void takeDamage(int enemyDamage) {
+    this.health -= enemyDamage;
+    if (health <= 0) {
+      isDead = true;
+    }
   }
 
-  public void increasedRadiation(int amount) {
-    this.radiation += amount;
+  public StimPak dropStimPak(Player player) {
+    if (isDead() && Math.random() < dropChanceStimPak) {
+      int healingAmount = 20;
+      StimPak stimPak = new StimPak("StimPak", "Item that heals for " + healingAmount + " health", healingAmount);
+      player.addToInventory(stimPak);
+      return stimPak;
+    } else {
+      return null;
+    }
   }
 
-  public void increaseRadiation(int amount) {
-    this.radiation -= amount;
+  // Getters and Setters
+
+  public double getDropChanceStimPak() {
+    return dropChanceStimPak;
   }
 
-  public void takeDamage(int damage) {
-    this.health -= damage;
-  }
-
-  public void setDropChance(double dropChance) {
-    this.dropChance = dropChance;
+  public void setDropChanceStimPak(double dropChanceStimPak) {
+    this.dropChanceStimPak = dropChanceStimPak;
   }
 
   public int getAttackPower() {
@@ -63,6 +88,30 @@ public class Enemy {
 
   public boolean isDead() {
     return this.health <= 0;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getHealth() {
+    return health;
+  }
+
+  public void setHealth(int health) {
+    this.health = health;
+  }
+
+  public void setAttackPower(int attackPower) {
+    this.attackPower = attackPower;
+  }
+
+  public void setDead(boolean dead) {
+    isDead = dead;
   }
 
 }
