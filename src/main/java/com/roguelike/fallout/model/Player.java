@@ -13,6 +13,7 @@ public class Player {
   private ArrayList<Item> inventory;
   private HashMap<String, Integer> inventoryCount;
   private int maxHealth = 100;
+  private boolean isDead;
 
 
   // Constructors
@@ -20,22 +21,24 @@ public class Player {
   public Player(String name) {
     setName(name);
     setHealth(100);
+    isDead = false;
     inventory = new ArrayList<>();
     inventoryCount = new HashMap<>();
   }
 
   // Attack Methods
   // Randomly generate a number between 0 and 25 as damage to Enemy.
-  // TODO: 1/9/23 Utilize enemyDamage to inflict damage to enemy health during battle sequence.
   public int playerAttack() {
     Random rand = new Random();
     int enemyDamage = (int) (Math.random() * 26);
     return enemyDamage;
   }
 
-  // TODO: 1/9/23 Utilize this method to take enemyAttack method from Enemy class to inflict damage to player health.
   public void takeDamage(int enemyAttack) {
     health -= enemyAttack;
+    if (health <= 0) {
+      isDead = true;
+    }
   }
 
   // Inventory Methods
@@ -53,7 +56,7 @@ public class Player {
       inventory.remove(item);
       inventoryCount.put(itemName, count - 1);
     } else {
-      System.out.println("You don't have ny more " + itemName + " in your inventory.");
+      System.out.println("You don't have any more " + itemName + " in your inventory.");
     }
   }
 
@@ -71,6 +74,11 @@ public class Player {
     if (health > maxHealth) {
       health = maxHealth;
     }
+  }
+
+  // isDead Method
+  public boolean isDead() {
+    return isDead;
   }
 
   // Helper Methods
