@@ -3,7 +3,7 @@ package com.roguelike.fallout.model;
 public class StimPak extends Item {
 
   // Fields
-  private int healingAmount;
+  private int healingAmount = 20;
 
   // Constructors
   public StimPak(String name, String description, int healingAmount) {
