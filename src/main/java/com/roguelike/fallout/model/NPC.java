@@ -4,32 +4,26 @@ import java.util.Random;
 
 public class NPC {
   private String name;
-  private int health;
-  private int minAttackPower;
-  private int maxAttackPower;
   private static final double DROP_CHANCE_STIMPAK = 1.0;
 
-  public NPC(String name, int health, int minAttackPower, int maxAttackPower) {
+  public NPC(String name) {
     this.name = name;
-    this.health = health;
-    this.minAttackPower = minAttackPower;
-    this.maxAttackPower = maxAttackPower;
-    setDropChanceStimPak(DROP_CHANCE_STIMPAK);
+    setDropChanceStimPak();
 
   }
 
   public StimPak dropStimPak(Player player) {
 
       Random rand = new Random();
-      int stimpakDropped = rand.nextInt(3) + 1; // rolls number between 1 and 3
+      int stimPakdropped = rand.nextInt(3) + 1; // rolls number between 1 and 3
 
-      if (stimpakDropped == 1) {
+      if (stimPakdropped == 1) {
         int healingAmount = 20;
         StimPak stimPak1 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
         player.addToInventory(stimPak1);
         System.out.println("1 Stimpak added to player inventory");
 
-      } else if (stimpakDropped == 2) {
+      } else if (stimPakdropped == 2) {
         int healingAmount = 20;
         StimPak stimPak1 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
         StimPak stimPak2 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
@@ -50,14 +44,15 @@ public class NPC {
     return null;
   }
 
-  private void setDropChanceStimPak(double dropChanceStimpak) {
+  public void npcDialog () {
+    System.out.println("You have encountered a friendly NPC. They give you some helpful information.");
+  }
+
+  private void setDropChanceStimPak() {
     System.out.println();
   }
 
-    public void npcDialog () {
-      System.out.println("\\nYou have encountered a friendly NPC. They give you some helpful information.\"\n"
-          + "                    + \"\\n\"");
-    }
+
   }
 
 

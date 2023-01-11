@@ -2,6 +2,7 @@ package com.roguelike.fallout.menu;
 
 import com.roguelike.fallout.model.Item;
 import com.roguelike.fallout.model.StimPak;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import com.roguelike.fallout.model.Player;
 
@@ -27,19 +28,23 @@ public class ItemMenu {
     System.out.println("1. Use an item");
     System.out.println("2. Return to previous menu");
 
-    int choice = sc.nextInt();
-    sc.nextLine();
+    try {
+      int choice = sc.nextInt();
+      sc.nextLine();
 
-    switch (choice) {
-      case 1:
-        useItem();
-        break;
-      case 2:
-        return;
-      default:
-        System.out.println("Invalid choice. Please enter a number between 1 and 2.");
-        displayMenu();
-        break;
+      switch (choice) {
+        case 1:
+          useItem();
+          break;
+        case 2:
+          return;
+        default:
+          System.out.println("Invalid choice. Please enter a number between 1 and 2.");
+      }
+    } catch (InputMismatchException e) {
+      System.out.println("Invalid choice. Please enter a number between 1 and 2.");
+      sc.nextLine();
+      displayMenu();
     }
   }
 
@@ -65,7 +70,8 @@ public class ItemMenu {
     }
     if (itemIndex < 1 || itemIndex > player.getInventory().size()) {
       System.out.println(
-          "Invalid choice. Please enter a number between 1 and " + (player.getInventory().size() + 1));
+          "Invalid choice. Please enter a number between 1 and " + (player.getInventory().size()
+              + 1));
       useItem();
       return;
     }
@@ -80,6 +86,5 @@ public class ItemMenu {
     } else {
       System.out.println("This type of item cannot be used.");
     }
-    return;
   }
 }

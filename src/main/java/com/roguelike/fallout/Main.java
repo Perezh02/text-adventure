@@ -6,19 +6,21 @@ import com.roguelike.fallout.menu.ItemMenu;
 import com.roguelike.fallout.menu.NameMenu;
 import com.roguelike.fallout.model.Boss;
 import com.roguelike.fallout.model.Enemy;
+import com.roguelike.fallout.model.NPC;
 import com.roguelike.fallout.model.Player;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    String name = "";
     boolean playing = true;
-
-    // Name screen
     NameMenu nameMenu = new NameMenu();
-    name = nameMenu.getPlayerName(sc);
+    String name = nameMenu.getPlayerName(sc);
+
+    while (playing == true) {
+      // Name screen
 
       // Start the game
       Player player = new Player(name.trim());
@@ -32,34 +34,41 @@ public class Main {
         System.out.println("2. Use an item");
         System.out.println("3. Quit the game");
 
-        int choice = sc.nextInt();
-        sc.nextLine();
+        int choice;
+        while (true) {
+          choice = sc.nextInt();
+          sc.nextLine();
+          if (choice >= 1 && choice <= 3) {
+            break;
+          }
+          System.out.println("Invalid Input, please enter a number between 1 and 3");
+        }
         if (choice == 1) {
           // Explore the wilds
           int randomEncounter = (int) (Math.random() * 100);
-          // TODO: 1/9/2023 Fix the for loop to be NPC and/or Enemy encounters
           if (randomEncounter <= 35) {
             // Encounter a friendly NPC
-            // TODO: 1/9/2023 Add chance for NPC to give you StimPaks.
-            System.out.println(
-                "\nYou have encountered a friendly NPC. They give you some helpful information."
-                    + "\n");
-
+            NPC npc = new NPC("NPC");
+            npc.npcDialog();
+            npc.dropStimPak(player);
+            encounter++;
           } else {
             // Encounter a dangerous enemy
             BattleMenu battleMenu = new BattleMenu(player, Enemy.generateRandomEnemy());
             battleMenu.startBattle();
             encounter++;
             // Death of player and option to restart
-            if (player.isDead()) {
+            if (player.isDead() || player.getHealth() <= 0) {
+              encounter = 0;
               System.out.println("Would you like to play again? (yes/no)");
               String restart = sc.next();
-              // TODO: 1/10/23 update code so that when resets if anything other than yes/no it prints error message.
-              if (restart.equals("yes")) {
+              if (restart.equalsIgnoreCase("yes")) {
                 player = new Player(name);
-                encounter = 0;
-              } else if (restart.equals("no")) {
+                player.reset();
+              } else if (restart.equalsIgnoreCase("no")) {
                 System.out.println("Thanks for playing!");
+                playing = false;
+                break;
               } else {
                 System.out.println("Sorry Invalid input, Please type yes or no");
               }
@@ -71,7 +80,8 @@ public class Main {
           itemMenu.displayMenu();
         } else if (choice == 3) {
           System.out.println("Thanks for playing!");
-          return;
+          playing = false;
+          break;
         }
       }
 
@@ -83,18 +93,32 @@ public class Main {
       bossMenu.startBattle();
       if (player.isDead()) {
         System.out.println("Would you like to play again? (yes/no)");
-        String restart = sc.next();
-        if (restart.equals("yes")) {
+        String restart = sc.nextLine();
+        if (restart.equalsIgnoreCase("yes")) {
           player = new Player(name);
           player.reset();
-        } else if (restart.equals("no")) {
+        } else if (restart.equalsIgnoreCase("no")) {
           System.out.println("Thanks for playing!");
+          break;
         } else {
           System.out.println("Sorry Invalid input, Please type yes or no");
         }
       } else {
-        System.out.println("You defeated the final boss. Thank you for playing!");
+        System.out.println("You have defeated " + boss.getName() + "!");
+        System.out.println("Congratulations on your victory!");
+        System.out.println("Would you like to play again? (yes/no)");
+        String restart = sc.next();
+        if (restart.equalsIgnoreCase("yes")) {
+          player = new Player(name);
+          player.reset();
+        } else if (restart.equalsIgnoreCase("no")) {
+          System.out.println("Thanks for playing!");
+          break;
+        } else {
+          System.out.println("Sorry Invalid input, Please type yes or no");
+        }
       }
     }
+  }
 }
 
