@@ -17,7 +17,6 @@ public class Player {
 
 
   // Constructors
-  // TODO: 1/9/23 Pass the players name from the main class to the player constructor. Add the following to main: Player player = new Player(name);
   public Player(String name) {
     setName(name);
     setHealth(100);
@@ -79,6 +78,14 @@ public class Player {
   // isDead Method
   public boolean isDead() {
     return isDead;
+  }
+
+  // Reset Method
+  public void reset() {
+    setHealth(100);
+    isDead = false;
+    inventory.clear();
+    inventoryCount.clear();
   }
 
   // Helper Methods

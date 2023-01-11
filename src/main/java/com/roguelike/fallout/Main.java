@@ -1,5 +1,12 @@
 package com.roguelike.fallout;
 
+import com.roguelike.fallout.menu.BattleMenu;
+import com.roguelike.fallout.menu.BossMenu;
+import com.roguelike.fallout.menu.ItemMenu;
+import com.roguelike.fallout.menu.NameMenu;
+import com.roguelike.fallout.model.Boss;
+import com.roguelike.fallout.model.Enemy;
+import com.roguelike.fallout.model.Player;
 import java.util.Scanner;
 
 public class Main {
@@ -10,153 +17,84 @@ public class Main {
     boolean playing = true;
 
     // Name screen
-    while (playing) {
-      System.out.println("Welcome to Fallout: Text Adventure game!" + "\n");
-      System.out.print("Could you tell me your name? (8 characters or shorter): ");
-      name = sc.nextLine();
+    NameMenu nameMenu = new NameMenu();
+    name = nameMenu.getPlayerName(sc);
 
-      // Checking to make sure the name is not empty
-      if (name.isEmpty()) {
-        System.out.println("Sorry, I couldn't see your name!");
-        continue;
-      }
-      // Checking to make sure the name is no longer than 8 characters
-      if (name.length() > 8) {
-        System.out.println(
-            "I'm pretty sure that's more than 8 characters. Do you maybe have a shorter name I can call you?");
-        continue;
-      }
       // Start the game
-      int health = 100;
-      boolean alive = true;
+      Player player = new Player(name.trim());
       int encounter = 0;
-      while (alive) {
+      while (encounter != 4) {
         // TODO: 1/9/2023 Add Location Enum that randomizes. 
-        System.out.println("\n" + name + ", you are currently in a dangerous forest.");
-        System.out.println("Your health is at " + health + "%.");
+        System.out.println(name + ", you are currently in a dangerous forest.");
+        System.out.println("Your health is at " + player.getHealth() + "%.");
         System.out.println("What would you like to do?");
         System.out.println("1. Explore the wilds");
-        System.out.println("2. Use a Stimpack");
+        System.out.println("2. Use an item");
         System.out.println("3. Quit the game");
 
         int choice = sc.nextInt();
+        sc.nextLine();
         if (choice == 1) {
           // Explore the wilds
           int randomEncounter = (int) (Math.random() * 100);
-           // TODO: 1/9/2023 Fix the for loop to be NPC and/or Emeny encounters
-            if (randomEncounter < 35) {
-              // Encounter a friendly NPC
-              // TODO: 1/9/2023 Add chance for NPC to give you Stimpacks. 
-              System.out.println(
-                  "\nYou have encountered a friendly NPC. They give you some helpful information." + "\n\n");
-            } else if (randomEncounter < 65) {
-              // Encounter a dangerous enemy
-              // TODO: 1/9/2023 Add Enemy, Health, and Attack randomizer. 
-              System.out.println("\nYou have encountered a dangerous enemy!");
-              // TODO: 1/9/2023 Print Enemy name and stats. Also at battle controller.
-              System.out.println("What would you like to do?");
-              System.out.println("1. Fight the enemy");
-              System.out.println("2. Try to run away");
+          // TODO: 1/9/2023 Fix the for loop to be NPC and/or Enemy encounters
+          if (randomEncounter <= 35) {
+            // Encounter a friendly NPC
+            // TODO: 1/9/2023 Add chance for NPC to give you StimPaks.
+            System.out.println(
+                "\nYou have encountered a friendly NPC. They give you some helpful information."
+                    + "\n");
 
-              int fightOrRun = sc.nextInt();
-              if (fightOrRun == 1) {
-                // Fight the enemy
-                // TODO: 1/9/2023 Add enemy and player class mechanics.
-                int attackPower = (int) (Math.random() * 25);
-                health -= attackPower;
-                System.out.println(
-                    "\nYou attack the enemy and deal " + attackPower + " points of damage.");
-                // TODO: 1/9/2023 Add print statement for remainder of enemy health. 
-                System.out.println("The enemy attacks back and deals 5 points of damage.");
-                // Death of player and option to restart
-                if (health <= 0) {
-                  alive = false;
-                  System.out.println("\nOh no! You have been defeated.");
-                  System.out.println("Would you like to restart the game? (yes/no)");
-                  String restart = sc.next();
-                  if (restart.equals("yes")) {
-                  } else {
-                    break;
-                  }
-                } else {
-                  System.out.println("You have " + health + "% health left." + "\n\n");
-                }
-              } else if (fightOrRun == 2) {
-                // Try to run away
-                int escapeChance = (int) (Math.random() * 100);
-                if (escapeChance < 50) {
-                  System.out.println("\nYou successfully escape from the enemy.");
-                } else {
-                  System.out.println("\nYou try to run away, but the enemy catches up to you.");
-                  System.out.println("The enemy attacks and deals 10 points of damage.");
-                  health -= 10;
-                  if (health <= 0) {
-                    alive = false;
-                    System.out.println("\nOh no! You have been defeated.");
-
-                  }
-                }
+          } else {
+            // Encounter a dangerous enemy
+            BattleMenu battleMenu = new BattleMenu(player, Enemy.generateRandomEnemy());
+            battleMenu.startBattle();
+            encounter++;
+            // Death of player and option to restart
+            if (player.isDead()) {
+              System.out.println("Would you like to play again? (yes/no)");
+              String restart = sc.next();
+              // TODO: 1/10/23 update code so that when resets if anything other than yes/no it prints error message.
+              if (restart.equals("yes")) {
+                player = new Player(name);
+                encounter = 0;
+              } else if (restart.equals("no")) {
+                System.out.println("Thanks for playing!");
+              } else {
+                System.out.println("Sorry Invalid input, Please type yes or no");
               }
             }
-            // After 4 encounters with either NPC and/or Enemies, break to boss fight.
-            encounter++;
-            if(encounter == 4) {
-              break;
-            }
           }
+        } else if (choice == 2) {
+          // Use an item.
+          ItemMenu itemMenu = new ItemMenu(player);
+          itemMenu.displayMenu();
+        } else if (choice == 3) {
+          System.out.println("Thanks for playing!");
+          return;
         }
-      System.out.println("You have reached the end of the forest, and you see the boss, Deathclaw!");
-      System.out.println("The boss has 100 health and deals 25 damage.");
-// TODO: 1/10/2023 Add boss mechanics.
-      int bossHealth = 100;
-      while (bossHealth > 0 && alive) {
-        System.out.println("What would you like to do?");
-        System.out.println("1. Attack the boss");
-        System.out.println("2. Use a Stimpack");
+      }
 
-        int bossFightChoice = sc.nextInt();
-        if (bossFightChoice == 1) {
-          int attackPower = (int) (Math.random() * 25);
-          bossHealth -= attackPower;
-          System.out.println("You attack the boss and deal " + attackPower + " points of damage.");
-          System.out.println("The boss has " + bossHealth + " health left.");
-        } else if (bossFightChoice == 2) {
-          // TODO: 1/10/2023 Add Stimpack code.
-        }
-        int bossAttack = 25;
-        health -= bossAttack;
-        System.out.println("The boss attacks and deals " + bossAttack + " points of damage.");
-        // Options after the user reaches 0 health.
-        // TODO: 1/10/2023 Make a controller for restart maybe. (Shows up during regular encounters also)
-        if (health <= 0) {
-          alive = false;
-          System.out.println("\nOh no! You have been defeated.");
-          System.out.println("Would you like to restart the game? (yes/no)");
-          String restart = sc.next();
-          sc.nextLine();
-          if (restart.equalsIgnoreCase("yes")) {
-            playing = true;
-            health = 100;
-            sc.nextLine();
-          } else {
-            System.out.println("Thank you for playing!");
-            try {
-              Thread.sleep(3000);
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            }
-            sc.close();
-            break;
-          }
+      //start the boss battle if encounter is 4
+      Boss boss = new Boss("Deathclaw", 100, 10);
+      System.out.println(boss.getName()
+          + ", the apex predator of the wasteland, blocks your path and attacks you.");
+      BossMenu bossMenu = new BossMenu(player, boss);
+      bossMenu.startBattle();
+      if (player.isDead()) {
+        System.out.println("Would you like to play again? (yes/no)");
+        String restart = sc.next();
+        if (restart.equals("yes")) {
+          player = new Player(name);
+          player.reset();
+        } else if (restart.equals("no")) {
+          System.out.println("Thanks for playing!");
         } else {
-          System.out.println("You have " + health + "% health left.");
+          System.out.println("Sorry Invalid input, Please type yes or no");
         }
-      }
-
-      if (bossHealth <= 0) {
-        System.out.println("You have defeated the boss!");
-      }
+      } else {
+        System.out.println("You defeated the final boss. Thank you for playing!");
       }
     }
-  }
+}
 

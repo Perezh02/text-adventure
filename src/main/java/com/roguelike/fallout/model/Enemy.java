@@ -1,35 +1,41 @@
 package com.roguelike.fallout.model;
 
+import java.util.Random;
+
 public class Enemy {
 
   // Fields
   private String name;
   private int health;
-  private int attackPower;
   private double dropChanceStimPak;
   private boolean isDead;
+  private int minAttackPower;
+  private int maxAttackPower;
+  private Random rand;
 
 
   // Constructors
   public Enemy(String name, int health, int attackPower, double dropChanceStimPak) {
     this.name = name;
     this.health = health;
-    this.attackPower = attackPower;
     this.dropChanceStimPak = dropChanceStimPak;
     isDead = false;
   }
 
-  public Enemy(String name) {
+  public Enemy(String name, int health, double randomDropChance) {
     this.name = name;
     if (name.equals("Skeleton")) {
       this.health = 50;
-      this.attackPower = (int) (Math.random() * 6);
+      this.minAttackPower = 0;
+      this.maxAttackPower = 5;
     } else if (name.equals("Ghoul")) {
       this.health = 55;
-      this.attackPower = (int) (Math.random() * 15 + 1);
+      this.minAttackPower = 0;
+      this.maxAttackPower = 15;
     } else if (name.equals("Rad Roach")) {
       this.health = 40;
-      this.attackPower = (int) (Math.random() * 26);
+      this.minAttackPower = 0;
+      this.maxAttackPower = 25;
     }
   }
 
@@ -40,18 +46,19 @@ public class Enemy {
     String randomName = enemyNames[randomIndex];
     double randomDropChance = Math.random();
     int health = 0;
-    int attackPower = 0;
     if (randomName.equals("Skeleton")) {
       health = 50;
-      attackPower = (int) (Math.random() * 6);
     } else if (randomName.equals("Ghoul")) {
       health = 55;
-      attackPower = (int) (Math.random() * 16);
     } else if (randomName.equals("Rad Roach")) {
       health = 40;
-      attackPower = (int) (Math.random() * 26);
     }
-    return new Enemy(randomName, health, attackPower, randomDropChance);
+    return new Enemy(randomName, health, randomDropChance);
+  }
+
+  public int enemyAttack() {
+    Random rand = new Random();
+    return rand.nextInt((maxAttackPower - minAttackPower) + 1) + minAttackPower;
   }
 
   public void takeDamage(int enemyDamage) {
@@ -82,10 +89,6 @@ public class Enemy {
     this.dropChanceStimPak = dropChanceStimPak;
   }
 
-  public int getAttackPower() {
-    return this.attackPower;
-  }
-
   public boolean isDead() {
     return this.health <= 0;
   }
@@ -106,12 +109,23 @@ public class Enemy {
     this.health = health;
   }
 
-  public void setAttackPower(int attackPower) {
-    this.attackPower = attackPower;
-  }
-
   public void setDead(boolean dead) {
     isDead = dead;
   }
 
+  public int getMinAttackPower() {
+    return minAttackPower;
+  }
+
+  public void setMinAttackPower(int minAttackPower) {
+    this.minAttackPower = minAttackPower;
+  }
+
+  public int getMaxAttackPower() {
+    return maxAttackPower;
+  }
+
+  public void setMaxAttackPower(int maxAttackPower) {
+    this.maxAttackPower = maxAttackPower;
+  }
 }

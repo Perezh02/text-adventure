@@ -17,14 +17,13 @@ public class BossMenu {
 
     public void startBattle() {
       ItemMenu itemMenu = new ItemMenu(player);
-      System.out.println(player.getName() + " encountered a " + boss.getName() + "!");
-      System.out.println(boss.getName() + " has " + boss.getHealth() + " health.");
-      System.out.println(player.getName() + " has " + player.getHealth() + " health.");
 
       boolean playerTurn = true;
 
       while (!player.isDead() && !boss.isDead()) {
         if (playerTurn) {
+          System.out.println("You have " + player.getHealth() + " health.");
+          System.out.println(boss.getName() + " has " + boss.getHealth() + " health.");
           System.out.println("What would you like to do?");
           System.out.println("1. Attack");
           System.out.println("2. Use an item");
@@ -32,7 +31,6 @@ public class BossMenu {
 
           int choice;
           do {
-            System.out.println("Enter your choice (1-3): ");
             choice = sc.nextInt();
             if (choice < 1 || choice > 3) {
               System.out.println(" Invalid choice. Please enter a number between 1 and 3.");
@@ -43,29 +41,27 @@ public class BossMenu {
             // Player attacks.
             int damage = player.playerAttack();
             boss.takeDamage(damage);
-            System.out.println(player.getName() + " has dealt " + damage + " damage to the boss.");
+            System.out.println("You dealt " + damage + " damage to " + boss.getName() + ".");
           } else if (choice == 2) {
             //  Player uses an item.
             itemMenu.displayMenu();
           } else if (choice == 3) {
             System.out.println();
-              System.out.println(player.getName() + " successfully escaped from the boss.");
-              return;
+              System.out.println("You are unable to escape as " + boss.getName() + " is blocking the escape route");
           }
           playerTurn = false;
         } else {
           // Boss's turn
           int bossAttackDamage = boss.getAttack();
           player.takeDamage(bossAttackDamage);
-          System.out.println(
-              "The boss deals " + bossAttackDamage + " damage to " + player.getName() + ".");
+          System.out.println(boss.getName() + " deals " + bossAttackDamage + " damage to you.");
           playerTurn = true;
         }
         if (player.isDead()) {
-          System.out.println("You have been defeated.");
+          System.out.println("You were defeated.");
           return;
         } else if (boss.isDead()) {
-          System.out.println("The boss has been defeated");
+          System.out.println(boss.getName() + " has been defeated");
         }
       }
     }
