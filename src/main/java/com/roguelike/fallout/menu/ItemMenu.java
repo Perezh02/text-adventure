@@ -17,13 +17,18 @@ public class ItemMenu {
 
   public void displayMenu() {
     System.out.println("Here are the items in your inventory: ");
-    player.printInventory();
+    if (player.getInventory().isEmpty()) {
+      System.out.println("None.");
+    } else {
+      player.printInventory();
+    }
 
     System.out.println("What would you like to do?");
     System.out.println("1. Use an item");
-    System.out.println("2. Return to battle menu");
+    System.out.println("2. Return to previous menu");
 
     int choice = sc.nextInt();
+    sc.nextLine();
 
     switch (choice) {
       case 1:
@@ -39,7 +44,16 @@ public class ItemMenu {
   }
 
   public void useItem() {
+    if (player.getInventory().isEmpty()) {
+      System.out.println("There are no items to use, the inventory is empty.");
+      return;
+    }
     System.out.println("Which item would you like to use?");
+    for (int i = 0; i < player.getInventory().size(); i++) {
+      System.out.println((i + 1) + ". " + player.getInventory().get(i).getItemName());
+    }
+    System.out.println((player.getInventory().size() + 1) + ". Return to previous menu.");
+
     String itemChoice = sc.nextLine();
     int itemIndex = -1;
     try {
@@ -50,7 +64,8 @@ public class ItemMenu {
       return;
     }
     if (itemIndex < 1 || itemIndex > player.getInventory().size()) {
-      System.out.println("Invalid choice. Please enter a number between 1 and " + player.getInventory().size());
+      System.out.println(
+          "Invalid choice. Please enter a number between 1 and " + (player.getInventory().size() + 1));
       useItem();
       return;
     }
