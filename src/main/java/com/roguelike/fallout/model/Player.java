@@ -12,7 +12,6 @@ public class Player {
   private int health;
   private ArrayList<Item> inventory;
   private HashMap<String, Integer> inventoryCount;
-  private int maxHealth = 100;
   private boolean isDead;
 
 
@@ -33,6 +32,7 @@ public class Player {
     return enemyDamage;
   }
 
+  // Method to decrement the player's health when they take damage.
   public void takeDamage(int enemyAttack) {
     health -= enemyAttack;
     if (health <= 0) {
@@ -41,7 +41,7 @@ public class Player {
   }
 
   // Inventory Methods
-  public void addToInventory (Item item) {
+  public void addToInventory(Item item) {
     inventory.add(item);
     String itemName = item.getItemName();
     int count = inventoryCount.getOrDefault(itemName, 0);
@@ -59,6 +59,7 @@ public class Player {
     }
   }
 
+  // Prints Inventory using Map and Inventory count values. Ex. StimPak x3
   public void printInventory() {
     for (Map.Entry<String, Integer> entry : inventoryCount.entrySet()) {
       String itemName = entry.getKey();
@@ -74,6 +75,7 @@ public class Player {
   // Heal Method
   public void heal(int healingAmount) {
     health += healingAmount;
+    int maxHealth = 100;
     if (health > maxHealth) {
       health = maxHealth;
     }

@@ -14,7 +14,6 @@ public class StimPak extends Item {
   }
 
   // Methods
-
   public void useStimPak(Player player) {
     player.heal(StimPak.this.healingAmount);
     System.out.println(

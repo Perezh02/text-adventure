@@ -4,8 +4,12 @@ import com.roguelike.fallout.model.Boss;
 import com.roguelike.fallout.model.Player;
 import java.util.Scanner;
 
+/**
+ * BossMenu class handles the user interaction for an encounter with a boss.
+ */
 public class BossMenu {
 
+  public static final int ATTACK_OPTION = 1;
   // Fields
   private Player player;
   private Boss boss;
@@ -44,12 +48,12 @@ public class BossMenu {
           }
         } while (choice < 1 || choice > 2);
 
-        if (choice == 1) {
+        if (choice == ATTACK_OPTION) {
           // Player attacks.
           int damage = player.playerAttack();
           boss.takeDamage(damage);
           System.out.println("You dealt " + damage + " damage to " + boss.getName() + ".");
-        } else if (choice == 2) {
+        } else {
           //  Player uses an item.
           itemMenu.displayMenu();
           continue;
@@ -57,13 +61,12 @@ public class BossMenu {
         // Set playerTurn to false to indicate it is now the boss's turn
         playerTurn = false;
       } else {
-        // Boss's turn
-        int bossAttackDamage = boss.getAttack();
-        player.takeDamage(bossAttackDamage);
-        System.out.println(boss.getName() + " deals " + bossAttackDamage + " damage to you.");
-        playerTurn = true;
-
-      }
+          // Boss's turn
+          int bossAttackPower = boss.getAttackPower();
+          player.takeDamage(bossAttackPower);
+          System.out.println(boss.getName() + " deals " + bossAttackPower + " damage to you.");
+          playerTurn = true;
+        }
       if (player.isDead()) {
         System.out.println("You were defeated. \n");
         return;

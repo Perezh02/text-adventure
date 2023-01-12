@@ -10,12 +10,7 @@ public class Item {
     setItemName(itemName);
   }
 
-
-  // HelperMethods
-
-
   // Getters and setters
-
   public String getItemName() {
     return itemName;
   }
@@ -24,12 +19,9 @@ public class Item {
     this.itemName = itemName;
   }
 
-
   // To String
-
   @Override
   public String toString() {
     return itemName;
   }
-
 }

@@ -8,19 +8,27 @@ import java.util.Map;
 import java.util.Scanner;
 import com.roguelike.fallout.model.Player;
 
+/**
+ * BattleMenu class handles the inventory interaction and functionalities.
+ */
 public class ItemMenu {
+
+  // Fields
+  public static final int USE_ITEM_OPTION = 1;
+  public static final int RETURN_PREVIOUS_MENU_OPTION = 2;
 
   private Player player;
   private Scanner sc;
-  private boolean returnToPreviousMenu = false;
 
+  // Constructor
   public ItemMenu(Player player) {
     this.player = player;
     sc = new Scanner(System.in);
   }
 
+  // Methods
   public boolean displayMenu() {
-    returnToPreviousMenu = false;
+    boolean returnToPreviousMenu = false;
     System.out.println("Here are the items in your inventory: ");
     if (player.getInventory().isEmpty()) {
       System.out.println("None.");
@@ -39,10 +47,10 @@ public class ItemMenu {
         sc.nextLine();
         System.out.println();
         switch (choice) {
-          case 1:
+          case USE_ITEM_OPTION:
             useItem();
             break;
-          case 2:
+          case RETURN_PREVIOUS_MENU_OPTION:
             returnToPreviousMenu = true;
             break;
           default:
@@ -70,13 +78,13 @@ public class ItemMenu {
     for (Map.Entry<String, Integer> entry : player.getInventoryCount().entrySet()) {
       String itemName = entry.getKey();
       int count = entry.getValue();
-      if(!alreadyListed.containsKey(itemName)) {
+      if (!alreadyListed.containsKey(itemName)) {
         alreadyListed.put(itemName, counter);
         System.out.println(counter + ". " + itemName + " x" + count);
         counter++;
       }
     }
-    System.out.println(counter + ". Return to previous menu.");
+    System.out.println(counter + ". Return to menu.");
 
     // asking for user input for selecting item
     int itemIndex = -1;
@@ -85,8 +93,9 @@ public class ItemMenu {
         String itemChoice = sc.nextLine();
         System.out.println();
         itemIndex = Integer.parseInt(itemChoice);
-        if(itemIndex < 1 || itemIndex > player.getInventoryCount().size() + 1) {
-          System.out.println("Invalid choice. Please enter a number between 1 and " + (player.getInventoryCount().size() + 1) + ".");
+        if (itemIndex < 1 || itemIndex > player.getInventoryCount().size() + 1) {
+          System.out.println("Invalid choice. Please enter a number between 1 and " + (
+              player.getInventoryCount().size() + 1) + ".");
         }
       } catch (NumberFormatException e) {
         System.out.println("Invalid choice. Please enter a number.");
@@ -95,6 +104,7 @@ public class ItemMenu {
     if (itemIndex == player.getInventoryCount().size() + 1) {
       return;
     }
+
     // Finding the item user has selected
     Item selectedItem = null;
     for (Map.Entry<String, Integer> entry : player.getInventoryCount().entrySet()) {
@@ -109,6 +119,8 @@ public class ItemMenu {
         break;
       }
     }
+
+    // If item is StimPak then heal player.
     if (selectedItem instanceof StimPak) {
       ((StimPak) selectedItem).useStimPak(player);
       player.removeFromInventory(selectedItem);
