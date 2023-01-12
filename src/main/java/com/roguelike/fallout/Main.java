@@ -19,7 +19,7 @@ public class Main {
     NameMenu nameMenu = new NameMenu();
     String name = nameMenu.getPlayerName(sc);
 
-    while (playing == true) {
+    if (playing) {
       // Name screen
 
       // Start the game
@@ -85,39 +85,44 @@ public class Main {
         }
       }
 
-      //start the boss battle if encounter is 4
-      Boss boss = new Boss("Deathclaw", 100, 10);
-      System.out.println(boss.getName()
-          + ", the apex predator of the wasteland, blocks your path and attacks you.");
-      BossMenu bossMenu = new BossMenu(player, boss);
-      bossMenu.startBattle();
-      if (player.isDead()) {
-        System.out.println("Would you like to play again? (yes/no)");
-        String restart = sc.nextLine();
-        if (restart.equalsIgnoreCase("yes")) {
-          player = new Player(name);
-          player.reset();
-        } else if (restart.equalsIgnoreCase("no")) {
-          System.out.println("Thanks for playing!");
-          break;
+      while (playing) { // add a possible boolean to fix this after being defeated by the boss.
+
+        //start the boss battle if encounter is 4
+        Boss boss = new Boss("Deathclaw", 100, 10);
+        System.out.println(boss.getName()
+            + ", the apex predator of the wasteland, blocks your path and attacks you.");
+        BossMenu bossMenu = new BossMenu(player, boss);
+        bossMenu.startBattle();
+        if (player.isDead()) {
+          System.out.println("Would you like to play again? (yes/no)");
+          String restart = sc.nextLine();
+          if (restart.equalsIgnoreCase("yes")) {
+            player = new Player(name);
+            player.reset();
+          } else if (restart.equalsIgnoreCase("no")) {
+            System.out.println("Thanks for playing!");
+            break;
+          } else {
+            System.out.println("Sorry Invalid input, Please type yes or no");
+          }
         } else {
-          System.out.println("Sorry Invalid input, Please type yes or no");
+          System.out.println("You have defeated " + boss.getName() + "!");
+          System.out.println("Congratulations on your victory!");
+          System.out.println("Would you like to play again? (yes/no)");
+          String restart = sc.next();
+          if (restart.equalsIgnoreCase("yes")) {
+            player = new Player(name);
+            player.reset();
+          } else if (restart.equalsIgnoreCase("no")) {
+            System.out.println("Thanks for playing!");
+            break;
+          } else {
+            System.out.println("Sorry Invalid input, Please type yes or no");
+          }
         }
-      } else {
-        System.out.println("You have defeated " + boss.getName() + "!");
-        System.out.println("Congratulations on your victory!");
-        System.out.println("Would you like to play again? (yes/no)");
-        String restart = sc.next();
-        if (restart.equalsIgnoreCase("yes")) {
-          player = new Player(name);
-          player.reset();
-        } else if (restart.equalsIgnoreCase("no")) {
-          System.out.println("Thanks for playing!");
-          break;
-        } else {
-          System.out.println("Sorry Invalid input, Please type yes or no");
-        }
+        break;
       }
+
     }
   }
 }
