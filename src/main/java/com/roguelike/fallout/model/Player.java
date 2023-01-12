@@ -19,7 +19,7 @@ public class Player {
   // Constructors
   public Player(String name) {
     setName(name);
-    setHealth(1);
+    setHealth(100);
     isDead = false;
     inventory = new ArrayList<>();
     inventoryCount = new HashMap<>();
