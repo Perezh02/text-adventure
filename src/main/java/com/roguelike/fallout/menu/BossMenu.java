@@ -32,6 +32,7 @@ public class BossMenu {
           int choice;
           do {
             choice = sc.nextInt();
+            System.out.println();
             if (choice < 1 || choice > 3) {
               System.out.println(" Invalid choice. Please enter a number between 1 and 3.");
             }
@@ -45,6 +46,7 @@ public class BossMenu {
           } else if (choice == 2) {
             //  Player uses an item.
             itemMenu.displayMenu();
+            continue;
           } else if (choice == 3) {
             System.out.println();
               System.out.println("You are unable to escape as " + boss.getName() + " is blocking the escape route");
@@ -58,7 +60,7 @@ public class BossMenu {
           playerTurn = true;
         }
         if (player.isDead()) {
-          System.out.println("You were defeated.");
+          System.out.println("You were defeated. \n");
           return;
         } else if (boss.isDead()) {
           System.out.println(boss.getName() + " has been defeated");

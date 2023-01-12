@@ -37,6 +37,7 @@ public class Enemy {
       this.minAttackPower = 0;
       this.maxAttackPower = 25;
     }
+    this.dropChanceStimPak = randomDropChance;
   }
 
   // Method
@@ -48,10 +49,13 @@ public class Enemy {
     int health = 0;
     if (randomName.equals("Skeleton")) {
       health = 50;
+      randomDropChance = 0.5;
     } else if (randomName.equals("Ghoul")) {
       health = 55;
+      randomDropChance = 0.4;
     } else if (randomName.equals("Rad Roach")) {
       health = 40;
+      randomDropChance = 0.3;
     }
     return new Enemy(randomName, health, randomDropChance);
   }
@@ -68,10 +72,11 @@ public class Enemy {
     }
   }
 
-  public StimPak dropStimPak(Player player) {
-    if (isDead() && Math.random() < dropChanceStimPak) {
+  public Object dropStimPak(Player player) {
+    if (isDead() && Math.random() < getDropChanceStimPak()) {
       int healingAmount = 20;
-      StimPak stimPak = new StimPak("StimPak", "Item that heals for " + healingAmount + " health", healingAmount);
+      int id = new Random().nextInt();
+      StimPak stimPak = new StimPak("StimPak", healingAmount, id);
       player.addToInventory(stimPak);
       return stimPak;
     } else {
@@ -127,5 +132,13 @@ public class Enemy {
 
   public void setMaxAttackPower(int maxAttackPower) {
     this.maxAttackPower = maxAttackPower;
+  }
+
+  public Random getRand() {
+    return rand;
+  }
+
+  public void setRand(Random rand) {
+    this.rand = rand;
   }
 }

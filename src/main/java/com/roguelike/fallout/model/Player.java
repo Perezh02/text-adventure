@@ -41,7 +41,7 @@ public class Player {
   }
 
   // Inventory Methods
-  public void addToInventory(Item item) {
+  public void addToInventory (Item item) {
     inventory.add(item);
     String itemName = item.getItemName();
     int count = inventoryCount.getOrDefault(itemName, 0);
@@ -63,8 +63,12 @@ public class Player {
     for (Map.Entry<String, Integer> entry : inventoryCount.entrySet()) {
       String itemName = entry.getKey();
       int count = entry.getValue();
-      System.out.println(count + "x " + itemName);
+      System.out.println(itemName + " x" + count);
     }
+  }
+
+  public HashMap<String, Integer> getInventoryCount() {
+    return inventoryCount;
   }
 
   // Heal Method
@@ -83,7 +87,7 @@ public class Player {
   // Reset Method
   public void reset() {
     setHealth(100);
-    isDead = true;
+    isDead = false;
     inventory.clear();
     inventoryCount.clear();
   }
@@ -110,5 +114,4 @@ public class Player {
   public ArrayList<Item> getInventory() {
     return inventory;
   }
-
 }

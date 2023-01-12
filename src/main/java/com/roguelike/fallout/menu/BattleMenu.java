@@ -20,7 +20,6 @@ public class BattleMenu {
   public void startBattle() {
     ItemMenu itemMenu = new ItemMenu(player);
     System.out.println("You encountered a " + enemy.getName() + "!");
-
     boolean playerTurn = true;
 
     while (!player.isDead() && !enemy.isDead()) {
@@ -35,6 +34,7 @@ public class BattleMenu {
         int choice;
         do {
           choice = sc.nextInt();
+          System.out.println();
           if (choice < 1 || choice > 3) {
             System.out.println("Invalid choice. Please enter a number between 1 and 3.");
           }
@@ -48,6 +48,7 @@ public class BattleMenu {
         } else if (choice == 2) {
           //  Player uses an item.
           itemMenu.displayMenu();
+          continue;
         } else if (choice == 3) {
           int escapeChance = (int) (Math.random() * 100);
           if (escapeChance < 50) {
@@ -67,15 +68,15 @@ public class BattleMenu {
         playerTurn = true;
       }
       if (player.isDead()) {
-        System.out.println("You have been defeated.");
+        System.out.println("You have been defeated.\n");
         return;
       } else if (enemy.isDead()) {
         System.out.println("The " + enemy.getName() + " has been defeated");
-        StimPak stimpak = enemy.dropStimPak(player);
+        StimPak stimpak = (StimPak) enemy.dropStimPak(player);
         //StimPak Drop Chance
         if (stimpak != null) {
           System.out.println("The " + enemy.getName() + " dropped a " + stimpak.getItemName() + ".");
-          System.out.println("You pick up the " + stimpak.getItemName() + " and put it into your inventory.");
+          System.out.println("You pick up the " + stimpak.getItemName() + " and put it into your inventory.\n");
         } else {
           System.out.println("The " + enemy.getName() + " did not drop an item");
         }

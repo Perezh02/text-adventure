@@ -19,27 +19,27 @@ public class NPC {
 
       if (stimPakdropped == 1) {
         int healingAmount = 20;
-        StimPak stimPak1 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
+        StimPak stimPak1 = new StimPak("StimPak", healingAmount, 1);
         player.addToInventory(stimPak1);
-        System.out.println("1 Stimpak added to player inventory");
+        System.out.println("1 StimPak added to player inventory.\n");
 
       } else if (stimPakdropped == 2) {
         int healingAmount = 20;
-        StimPak stimPak1 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
-        StimPak stimPak2 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
+        StimPak stimPak1 = new StimPak("StimPak", healingAmount, 1);;
+        StimPak stimPak2 = new StimPak("StimPak", healingAmount, 1);;
         player.addToInventory(stimPak1);
         player.addToInventory(stimPak2);
-        System.out.println("2 Stimpak added to player inventory");
+        System.out.println("2 StimPak added to player inventory.\n");
 
       } else {
         int healingAmount = 20;
-        StimPak stimPak1 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
-        StimPak stimPak2 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
-        StimPak stimPak3 = new StimPak("Stimpak", "Item that heals for" + healingAmount + "health", healingAmount);
+        StimPak stimPak1 = new StimPak("StimPak", healingAmount, 1);;
+        StimPak stimPak2 = new StimPak("StimPak", healingAmount, 1);;
+        StimPak stimPak3 = new StimPak("StimPak", healingAmount, 1);;
         player.addToInventory(stimPak1);
         player.addToInventory(stimPak2);
         player.addToInventory(stimPak3);
-        System.out.println("3 Stimpaks added to player inventory");
+        System.out.println("3 StimPaks added to player inventory.\n");
       }
     return null;
   }
