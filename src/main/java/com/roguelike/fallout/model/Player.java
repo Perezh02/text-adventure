@@ -41,7 +41,7 @@ public class Player {
   }
 
   // Inventory Methods
-  public void addToInventory (Item item) {
+  public void addToInventory(Item item) {
     inventory.add(item);
     String itemName = item.getItemName();
     int count = inventoryCount.getOrDefault(itemName, 0);
@@ -83,7 +83,7 @@ public class Player {
   // Reset Method
   public void reset() {
     setHealth(100);
-    isDead = false;
+    isDead = true;
     inventory.clear();
     inventoryCount.clear();
   }
