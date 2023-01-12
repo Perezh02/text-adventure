@@ -78,7 +78,7 @@ public class BattleMenu {
           System.out.println("The " + enemy.getName() + " dropped a " + stimpak.getItemName() + ".");
           System.out.println("You pick up the " + stimpak.getItemName() + " and put it into your inventory.\n");
         } else {
-          System.out.println("The " + enemy.getName() + " did not drop an item");
+          System.out.println("The " + enemy.getName() + " did not drop an item.\n");
         }
         return;
       }
