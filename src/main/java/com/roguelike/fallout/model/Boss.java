@@ -17,16 +17,20 @@ public class Boss {
     this.health = 100;
     this.attacks = new ArrayList<Attack>();
     if (name.equals("Deathclaw")) {
+      // set the maximum roll for the random attack power
       int maxRoll = 5;
 
-      int clawSwipeAttackPower = 20 + (int)(Math.random() * maxRoll);
-      int tailWhipAttackPower = 15 + (int)(Math.random() * maxRoll);
+      int clawSwipeAttackPower = 20 + (int) (Math.random() * maxRoll);
+      int tailWhipAttackPower = 15 + (int) (Math.random() * maxRoll);
       this.attacks.add(new Attack("Claw swipe", clawSwipeAttackPower));
       this.attacks.add(new Attack("Tail whip", tailWhipAttackPower));
     }
   }
 
+  // method to use an attack on a player target
   public void useAttack(int attackIndex, Player target) {
+
+    // check if the attackIndex is valid
     if (attackIndex < this.attacks.size()) {
       this.attacks.get(attackIndex).attack(target);
     }
@@ -62,6 +66,8 @@ public class Boss {
       this.name = name;
       this.attackPower = attackPower;
     }
+
+    // setter and getters
 
     public void attack(Player target) {
       target.takeDamage(this.attackPower);
