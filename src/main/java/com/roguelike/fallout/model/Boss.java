@@ -18,6 +18,7 @@ public class Boss {
     this.attacks = new ArrayList<Attack>();
     if (name.equals("Deathclaw")) {
       int maxRoll = 5;
+
       int clawSwipeAttackPower = 20 + (int)(Math.random() * maxRoll);
       int tailWhipAttackPower = 15 + (int)(Math.random() * maxRoll);
       this.attacks.add(new Attack("Claw swipe", clawSwipeAttackPower));
