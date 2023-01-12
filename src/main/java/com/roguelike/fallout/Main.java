@@ -6,8 +6,12 @@ import com.roguelike.fallout.menu.ItemMenu;
 import com.roguelike.fallout.menu.NameMenu;
 import com.roguelike.fallout.model.Boss;
 import com.roguelike.fallout.model.Enemy;
+import com.roguelike.fallout.model.Locations;
 import com.roguelike.fallout.model.NPC;
 import com.roguelike.fallout.model.Player;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -25,125 +29,132 @@ public class Main {
         // Start the game
         Player player = new Player(name.trim());
         int encounter = 0;
+
         while (encounter != 4) {
-          // TODO: 1/9/2023 Add Location Enum that randomizes.
-          System.out.println(name + ", you are currently in a dangerous forest.");
-          System.out.println("Your health is at " + player.getHealth() + "%.");
-          System.out.println("What would you like to do?");
-          System.out.println("1. Explore the wilds");
-          System.out.println("2. Use an item");
-          System.out.println("3. Quit the game");
+          List<Locations> visitedLocations = new ArrayList<>(Arrays.asList(Locations.values()));
+            int randomIndex = (int) (Math.random() * visitedLocations.size());
+            Locations randomLocation = visitedLocations.get(randomIndex);
+            visitedLocations.remove(randomIndex);
+            System.out.println(name + randomLocation.getDescription());
+            System.out.println("Your health is at " + player.getHealth() + "%.");
+            System.out.println("What would you like to do?");
+            System.out.println("1. Explore the wilds");
+            System.out.println("2. Use an item");
+            System.out.println("3. Quit the game");
 
-          int choice;
-          while (true) {
-            choice = sc.nextInt();
-            System.out.println();
-            sc.nextLine();
-            System.out.println();
+            int choice;
+            while (true) {
+              choice = sc.nextInt();
+              System.out.println();
+              sc.nextLine();
+              System.out.println();
 
-            if (choice >= 1 && choice <= 3) {
-              break;
+              if (choice >= 1 && choice <= 3) {
+                break;
+              }
+              System.out.println("Invalid Input, please enter a number between 1 and 3");
             }
-            System.out.println("Invalid Input, please enter a number between 1 and 3");
-          }
-          if (choice == 1) {
-            // Explore the wilds
-            int randomEncounter = (int) (Math.random() * 100);
-            if (randomEncounter <= 35) {
-              // Encounter a friendly NPC
-              NPC npc = new NPC("NPC");
-              npc.npcDialog();
-              npc.dropStimPak(player);
-              encounter++;
-            } else {
-              // Encounter a dangerous enemy
-              BattleMenu battleMenu = new BattleMenu(player, Enemy.generateRandomEnemy());
-              battleMenu.startBattle();
-              encounter++;
-              // Death of player and option to restart
-              if (player.isDead() || player.getHealth() <= 0) {
-                encounter = 0;
-                System.out.println("Would you like to play again? (yes/no)");
-                String restart = sc.next();
-                System.out.println();
-                if (restart.equalsIgnoreCase("yes")) {
-                  player = new Player(name);
-                  player.reset();
-                } else if (restart.equalsIgnoreCase("no")) {
-                  System.out.println("Thanks for playing!");
-                  playing = false;
-                  break;
-                } else {
-                  System.out.println("Sorry Invalid input, Please type yes or no");
+            if (choice == 1) {
+              // Explore the wilds
+              int randomEncounter = (int) (Math.random() * 100);
+              if (randomEncounter <= 35) {
+                // Encounter a friendly NPC
+                NPC npc = new NPC("traveler");
+                npc.npcDialog();
+                npc.dropStimPak(player);
+                encounter++;
+              } else {
+                // Encounter a dangerous enemy
+                BattleMenu battleMenu = new BattleMenu(player, Enemy.generateRandomEnemy());
+                battleMenu.startBattle();
+                encounter++;
+                // Death of player and option to restart
+                if (player.isDead() || player.getHealth() <= 0) {
+                  do {
+                    System.out.println("Would you like to play again? (yes/no)");
+                    String restart = sc.next();
+                    System.out.println();
+                    if (restart.equalsIgnoreCase("yes")) {
+                      player = new Player(name);
+                      player.reset();
+                      encounter = 0;
+                      break;
+                    } else if (restart.equalsIgnoreCase("no")) {
+                      System.out.println("Thanks for playing!");
+                      playing = false;
+                      break;
+                    } else {
+                      System.out.println("Sorry Invalid input, Please type yes or no");
+                    }
+                  } while (true);
                 }
               }
+            } else if (choice == 2) {
+              // Use an item.
+              ItemMenu itemMenu = new ItemMenu(player);
+              itemMenu.displayMenu();
+            } else if (choice == 3) {
+              System.out.println("Thanks for playing!");
+              playing = false;
+              break;
             }
-          } else if (choice == 2) {
-            // Use an item.
-            ItemMenu itemMenu = new ItemMenu(player);
-            itemMenu.displayMenu();
-          } else if (choice == 3) {
-            System.out.println("Thanks for playing!");
-            playing = false;
-            break;
           }
-        }
 
-        while (playing) {
-          if (encounter == 4) {
-            //start the boss battle if encounter is 4
-            Boss boss = new Boss("Deathclaw", 100, 10);
-            System.out.println(boss.getName()
-                + ", the apex predator of the wasteland, blocks your path and attacks you.");
-            BossMenu bossMenu = new BossMenu(player, boss);
-            bossMenu.startBattle();
-            if (player.isDead()) {
-              do {
-                System.out.println("Would you like to play again? (yes/no)");
-                String restart = sc.nextLine();
-                System.out.println();
-                if (!(restart.equalsIgnoreCase("yes") || restart.equalsIgnoreCase("no"))) {
-                  System.out.println("Invalid input, please enter 'yes' or 'no'.");
-                } else if (restart.equalsIgnoreCase("yes")) {
-                  player = new Player(name);
-                  player.reset();
-                  encounter = 0;
-                  break;
-                } else if (restart.equalsIgnoreCase("no")) {
-                  System.out.println("Thanks for playing!");
-                  playing = false;
-                  break;
-                }
-              } while (true);
+          while (playing) {
+            if (encounter == 4) {
+              //start the boss battle if encounter is 4
+              Boss boss = new Boss("Deathclaw", 100, 10);
+              System.out.println(boss.getName()
+                  + ", the apex predator of the wasteland, blocks your path and attacks you.");
+              BossMenu bossMenu = new BossMenu(player, boss);
+              bossMenu.startBattle();
+              if (player.isDead()) {
+                do {
+                  System.out.println("Would you like to play again? (yes/no)");
+                  String restart = sc.nextLine();
+                  System.out.println();
+                  if (!(restart.equalsIgnoreCase("yes") || restart.equalsIgnoreCase("no"))) {
+                    System.out.println("Invalid input, please enter 'yes' or 'no'.");
+                  } else if (restart.equalsIgnoreCase("yes")) {
+                    player = new Player(name);
+                    player.reset();
+                    encounter = 0;
+                    break;
+                  } else if (restart.equalsIgnoreCase("no")) {
+                    System.out.println("Thanks for playing!");
+                    playing = false;
+                    break;
+                  }
+                } while (true);
 
+              } else {
+                do {
+                  System.out.println("You have defeated " + boss.getName() + "!");
+                  System.out.println("Congratulations on your victory!");
+                  System.out.println("Would you like to play again? (yes/no)");
+                  String restart = sc.next();
+                  System.out.println();
+                  if (!(restart.equalsIgnoreCase("yes") || restart.equalsIgnoreCase("no"))) {
+                    System.out.println("Invalid input, please enter 'yes' or 'no'.");
+                  } else if (restart.equalsIgnoreCase("yes")) {
+                    player = new Player(name);
+                    player.reset();
+                    playing = true;
+                    encounter = 0;
+                    break;
+                  } else if (restart.equalsIgnoreCase("no")) {
+                    System.out.println("Thanks for playing!");
+                    playing = false;
+                    break;
+                  }
+                } while (true);
+              }
             } else {
-              do {
-                System.out.println("You have defeated " + boss.getName() + "!");
-                System.out.println("Congratulations on your victory!");
-                System.out.println("Would you like to play again? (yes/no)");
-                String restart = sc.next();
-                System.out.println();
-                if (!(restart.equalsIgnoreCase("yes") || restart.equalsIgnoreCase("no"))) {
-                  System.out.println("Invalid input, please enter 'yes' or 'no'.");
-                } else if (restart.equalsIgnoreCase("yes")) {
-                  player = new Player(name);
-                  player.reset();
-                  playing = true;
-                  encounter = 0;
-                  break;
-                } else if (restart.equalsIgnoreCase("no")) {
-                  System.out.println("Thanks for playing!");
-                  playing = false;
-                  break;
-                }
-              } while (true);
+              break;
             }
-          } else {
-            break;
           }
         }
       }
     }
   }
-}
 

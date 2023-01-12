@@ -39,20 +39,22 @@ public class NPC {
         player.addToInventory(stimPak1);
         player.addToInventory(stimPak2);
         player.addToInventory(stimPak3);
-        System.out.println("3 StimPaks added to player inventory.\n");
+        System.out.println("3 StimPaks added to your inventory.\n");
       }
     return null;
   }
 
   public void npcDialog () {
-    System.out.println("You have encountered a friendly NPC. They give you some helpful information.");
+    System.out.println("You have encountered a friendly " + getName() +". They give you some helpful information.");
   }
 
   private void setDropChanceStimPak() {
     System.out.println();
   }
 
-
+  public String getName() {
+    return name;
   }
+}
 
 
