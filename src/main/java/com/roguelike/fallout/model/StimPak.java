@@ -4,23 +4,21 @@ public class StimPak extends Item {
 
   // Fields
   private int healingAmount = 20;
+  private int id;
 
   // Constructors
-  public StimPak(String name, String description, int healingAmount) {
-    super(name, description);
-    this.healingAmount = healingAmount;
+  public StimPak(String name, int healingAmount, int id) {
+    super(name);
+    this.healingAmount = Integer.parseInt(String.valueOf(healingAmount));
+    this.id = id;
   }
 
   // Methods
 
   public void useStimPak(Player player) {
-    if (player.getInventory().contains(this)) {
-      player.removeFromInventory(this);
-      player.heal(healingAmount);
-      System.out.println("StimPak was used to heal "+ healingAmount + " health points.");
-    } else {
-      System.out.println("You don't have any StimPaks in your inventory.");
-    }
+    player.heal(StimPak.this.healingAmount);
+    System.out.println(
+        "StimPak was used to heal " + StimPak.this.healingAmount + " health points.");
   }
 
   // Setters and Getters
@@ -30,6 +28,10 @@ public class StimPak extends Item {
 
   public void setHealingAmount(int healingAmount) {
     this.healingAmount = healingAmount;
+  }
+
+  public int getId() {
+    return id;
   }
 
   // To String

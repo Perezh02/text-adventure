@@ -10,6 +10,7 @@ public class NameMenu {
     System.out.print("Could you tell me your name? (8 characters or shorter): ");
     while (name.isEmpty() || name.length() > 8) {
       name = sc.nextLine().trim();
+      System.out.println();
       if (name.isEmpty()) {
         System.out.println("Sorry, I couldn't see your name!");
       }
